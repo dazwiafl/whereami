@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	var app = new WhereAmI();
+	var app = new WhereAmI($('#container'));
 	
 	console.log(app.isActive());
 

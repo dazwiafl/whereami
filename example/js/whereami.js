@@ -1,27 +1,15 @@
-function WhereAmI(){
+function WhereAmI($el){
 	var self = this;
 	
+	self._$mainView = $el;
+	
+	self.FoursquareInteraction = new FoursquareInteractionModel();
 	self.GeoLocation = new GeoLocationModel({callBack: function(){
 		var pos = this.get("position");
-		$.ajax({
-			url: "https://api.foursquare.com/v2/venues/search",
-			data:{
-				ll: pos.toString(),
-				radius: 500,
-				v: '20130306',
-				limit: 50,
-				intent: 'checkin',
-				client_id: 'FIXLSYUYMO404EC5HWKRK5EKFADA3L50DB5FCUR5F1S1BWCW',
-				client_secret: 'U4R30RPUDTCH1P2AH50LKKFCIWCZWJY4J013LYOAN1RRR3Y5'
-			},
-			success: function(x){
-				console.log("success", x);
-				dump(x);
-			},
-			error: function(x){
-				console.log("error", x);
-			}
-		});
+		if(!pos)
+			return;
+			
+		self.initializeCapturing(pos);
 	}});
 	
 	self.isActive = function(){
@@ -29,5 +17,25 @@ function WhereAmI(){
 			return false;
 			
 		return true;
-	}		
+	};
+	
+	self.initializeCapturing = function(pos){
+		self.FoursquareInteraction.captureVenues(pos, self.initializeView);
+	};
+	
+	self.initializeView = function(type, model){
+		console.log(type, model);
+		return;
+		
+		self._$mainView.empty();
+		var view = null;
+		switch(type){
+			case "4sq_capture": view = new FoursquareCaptureView({model:model}); break;
+		}
+		
+		if(!view)
+			return;
+			
+		self._$mainView.append(view.$el);
+	};
 };
