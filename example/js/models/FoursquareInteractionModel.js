@@ -24,7 +24,12 @@ FoursquareInteractionModel = Backbone.Model.extend({
 				client_secret: self.get("client_secret")
 			},
 			success: function(x){
-				callback('4sq_capture', x);
+				var fsvc = new FoursquareVenueCollection(); 
+				_.each(x.response.venues, function(ele){
+					var fsvm = new FoursquareVenueModel(ele);
+					fsvc.push(fsvm);
+				});
+				callback('4sq_capture', fsvc);
 			},
 			error: function(x){
 				callback(null);

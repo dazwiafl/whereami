@@ -24,13 +24,10 @@ function WhereAmI($el){
 	};
 	
 	self.initializeView = function(type, model){
-		console.log(type, model);
-		return;
-		
 		self._$mainView.empty();
 		var view = null;
 		switch(type){
-			case "4sq_capture": view = new FoursquareCaptureView({model:model}); break;
+			case "4sq_capture": view = new FoursquareCaptureView({collection:model}); break;
 		}
 		
 		if(!view)
